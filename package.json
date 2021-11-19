@@ -1,0 +1,31 @@
+{
+  "name": "quikdev-backend-challenge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/index.js",
+    "dev": "nodemon ./src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DonovanTarsis/quikdev-backend-challenge.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DonovanTarsis/quikdev-backend-challenge/issues"
+  },
+  "homepage": "https://github.com/DonovanTarsis/quikdev-backend-challenge#readme",
+  "dependencies": {
+    "date-fns": "^2.25.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^6.0.13",
+    "yup": "^0.32.11"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
