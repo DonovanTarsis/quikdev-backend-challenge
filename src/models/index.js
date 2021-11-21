@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema({
         required: true
     },
     birthdate:{
-        type: String,
+        type: Number,
         required: true
     },
     address:{
@@ -18,7 +18,7 @@ const UserSchema = new mongoose.Schema({
         required: true
     },
     addressNumber:{
-        type: String,
+        type: Number,
         required: true
     },
     primaryPhone:{
@@ -27,9 +27,13 @@ const UserSchema = new mongoose.Schema({
     },
     description:{
         type: String,
-        required: false
+        default: "Hi, I'm in the quikDev database!"
     },
     createdAt:{
+        type: String, 
+        default: +Date.now()
+    },
+    password:{
         type: String,
         required: true
     }

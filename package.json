@@ -19,9 +19,11 @@
   },
   "homepage": "https://github.com/DonovanTarsis/quikdev-backend-challenge#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "date-fns": "^2.25.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.13",
     "yup": "^0.32.11"
   },
