@@ -5,7 +5,9 @@ const {
     patchUser, 
     setUserPassword, 
     requestUsersList,
-    requestUserById
+    requestUserById,
+    requestCurrentUser,
+    deleteUser
 } = require('../controller/users');
 const { checkLogin } = require('../middleware/checkLogin');
 
@@ -17,6 +19,8 @@ router.post('/users', createUser);
 router.patch('/users', checkLogin, patchUser);
 router.patch('/users/password', checkLogin, setUserPassword);
 router.get('/users', checkLogin, requestUsersList)
+router.get('/profile', checkLogin, requestCurrentUser)
 router.get('/users/:id', checkLogin, requestUserById)
+router.delete('/users', checkLogin, deleteUser)
 
 module.exports = router;
