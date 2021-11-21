@@ -2,6 +2,8 @@ const User = require('../models/index');
 const bcrypt = require('bcrypt')
 const schemaRegisterUser = require('../validations/schemaRegisterUser');
 const schemaPatchUser = require('../validations/schemaPatchUser');
+const schemaSetPassword = require('../validations/schemaSetPassword');
+const formatPhone = require('../utils/formatPhone');
 
 const createUser = async (req, res) => {
     const {
@@ -11,16 +13,11 @@ const createUser = async (req, res) => {
     } = req.body;
     try {
         await schemaRegisterUser.validate(req.body);
-        let formattedPhone = primaryPhone.toString();
-        if (formattedPhone.length === 11) {
-            formattedPhone = `(${formattedPhone.substr(0, 2)}) ${formattedPhone.substr(2, 5)}-${formattedPhone.substr(7)}`
-        } else if (formattedPhone.length === 10) {
-            formattedPhone = `(${formattedPhone.substr(0, 2)}) ${formattedPhone.substr(2, 4)}-${formattedPhone.substr(6)}`
-
-        } else {
-            return res.status(400).json({ message: 'The phone must have a min of 10 digits and a max of 11 digits.' });
+        const formattedPhone = formatPhone(primaryPhone)
+        if(formattedPhone.error){
+            return res.status(400).json({ message: formattedPhone.error });
         }
-        const existingUser = await User.find({ $or: [{ username }, { primaryPhone }] }).select(['name', 'username', 'primaryPhone']);
+        const existingUser = await User.find({ $or: [{ username }, { primaryPhone: formattedPhone }] }).select(['name', 'username', 'primaryPhone']);
         if (existingUser.length) {
             for (const item of existingUser) {
                 if (item.username === username) {
@@ -51,17 +48,9 @@ const patchUser = async (req, res) => {
     } = req.body;
     try {
         await schemaPatchUser.validate(req.body);
-        let formattedPhone = "";
-        if (primaryPhone) {
-            formattedPhone = primaryPhone.toString();
-            if (formattedPhone.length === 11) {
-                formattedPhone = `(${formattedPhone.substr(0, 2)}) ${formattedPhone.substr(2, 5)}-${formattedPhone.substr(7)}`
-            } else if (formattedPhone.length === 10) {
-                formattedPhone = `(${formattedPhone.substr(0, 2)}) ${formattedPhone.substr(2, 4)}-${formattedPhone.substr(6)}`
-
-            } else {
-                return res.status(400).json({ message: 'The phone must have a min of 10 digits and a max of 11 digits.' });
-            }
+        const formattedPhone = formatPhone(primaryPhone)
+        if(formattedPhone && formattedPhone.error){
+            return res.status(400).json({ message: formattedPhone.error });
         }
         const existingUser = await User.find({ _id: { $ne: req.user._id }, $or: [{ username }, { primaryPhone }] }).select();
         if (existingUser.length) {
@@ -80,8 +69,37 @@ const patchUser = async (req, res) => {
             birthdate: birthdate ?? req.user.birthdate,
             address: address ?? req.user.address,
             addressNumber: addressNumber ?? req.user.addressNumber,
-            primaryPhone: primaryPhone ?? req.user.primaryPhone,
+            primaryPhone: formattedPhone ?? req.user.primaryPhone,
             description: description ?? req.user.description,
+        };
+        const update = await User.findByIdAndUpdate({ _id: req.user._id }, userUpdate)
+        if (!update) {
+            return res.status(500).json({ message: "jogo não atualizado" })
+        }
+        const { __v, password: _, ...response } = userUpdate;
+        res.status(200).json(response)
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+
+const setUserPassword = async (req, res) => {
+    const {
+        currentPassword,
+        newPassword
+    } = req.body;
+    try {
+        await schemaSetPassword.validate(req.body);
+        const passwordVerified = await bcrypt.compare(currentPassword, req.user.password);
+
+        if (!passwordVerified) {
+            return res.status(401).json({ message: "Incorrect Password" });
+        }
+        const passwordHash = await bcrypt.hash(newPassword, 10)
+        const userUpdate = {
+            ...req.user._doc,
+            password: passwordHash
         };
         const update = await User.findByIdAndUpdate({ _id: req.user._id }, userUpdate)
         if (!update) {
@@ -96,5 +114,6 @@ const patchUser = async (req, res) => {
 
 module.exports = {
     createUser,
-    patchUser
+    patchUser,
+    setUserPassword
 }

@@ -10,12 +10,12 @@ async function login(req, res) {
         await schemaLogin.validate(req.body)
         const user = await User.findOne().where('username').equals(username).select();
         if (user === null) {
-            return res.status(401).json({ message: "Incorrect email or password" });
+            return res.status(401).json({ message: "Incorrect username or password" });
         }
         const passwordVerified = await bcrypt.compare(password, user.password);
 
         if (!passwordVerified) {
-            return res.status(401).json({ message: "Incorrect email or password" });
+            return res.status(401).json({ message: "Incorrect username or password" });
         }
 
         const token = jwt.sign({
