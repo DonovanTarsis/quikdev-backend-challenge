@@ -4,7 +4,8 @@ const {
     createUser, 
     patchUser, 
     setUserPassword, 
-    requestUsersList 
+    requestUsersList,
+    requestUserById
 } = require('../controller/users');
 const { checkLogin } = require('../middleware/checkLogin');
 
@@ -16,5 +17,6 @@ router.post('/users', createUser);
 router.patch('/users', checkLogin, patchUser);
 router.patch('/users/password', checkLogin, setUserPassword);
 router.get('/users', checkLogin, requestUsersList)
+router.get('/users/:id', checkLogin, requestUserById)
 
 module.exports = router;

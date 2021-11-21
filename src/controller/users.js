@@ -1,5 +1,6 @@
 const User = require('../models/index');
 const bcrypt = require('bcrypt')
+const mongoose = require('../database/connection');
 const schemaRegisterUser = require('../validations/schemaRegisterUser');
 const schemaPatchUser = require('../validations/schemaPatchUser');
 const schemaSetPassword = require('../validations/schemaSetPassword');
@@ -115,10 +116,33 @@ const setUserPassword = async (req, res) => {
 const requestUsersList = async (req, res) => {
     try {
         const list = await User.find().select("name username birthdate address addressNumber primaryPhone description createdAt")
-        if (!list) {
-            return res.status(500).json({ message: "jogo não atualizado" })
-        }
         res.status(200).json(list)
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+const requestUserById = async (req, res) => {
+    const id = req.params.id
+    if (!mongoose.Types.ObjectId.isValid(id)){
+        return res.status(400).json({ message: "Invalid ID." });
+    }
+    try {
+        const user = await User.findById(id).select("name username birthdate address addressNumber primaryPhone description createdAt")
+        if(user === null){
+        return res.status(404).json({ message: "User not found." });
+        }
+        res.status(200).json(user)
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+const deleteUser = async (req, res) => {
+    const id = req.user._id;
+    try {
+        const user = await User.findByIdAndDelete(id);
+        res.status(200).json(user)
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -128,5 +152,6 @@ module.exports = {
     createUser,
     patchUser,
     setUserPassword,
-    requestUsersList
+    requestUsersList,
+    requestUserById
 }
