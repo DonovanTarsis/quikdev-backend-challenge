@@ -112,8 +112,21 @@ const setUserPassword = async (req, res) => {
     }
 }
 
+const requestUsersList = async (req, res) => {
+    try {
+        const list = await User.find().select("name username birthdate address addressNumber primaryPhone description createdAt")
+        if (!list) {
+            return res.status(500).json({ message: "jogo não atualizado" })
+        }
+        res.status(200).json(list)
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
 module.exports = {
     createUser,
     patchUser,
-    setUserPassword
+    setUserPassword,
+    requestUsersList
 }
