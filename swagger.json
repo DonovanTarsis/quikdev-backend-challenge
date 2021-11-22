@@ -5,7 +5,7 @@
     "title": "Quik Dev REST API",
     "description": "Api de controle de usuários."
   },
-  "host": "localhost:3000",
+  "host": "https://quikdev.herokuapp.com/",
   "basePath": "/",
   "tags": [],
   "schemes": [
@@ -53,39 +53,33 @@
           {
             "name": "obj",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "name": {
-                  "example": "João Silva Ribeiro",
-                  "required": true
+                  "example": "João Silva Ribeiro"
                 },
                 "username": {
-                  "example": "Joao_Dev",
-                  "required": true
+                  "example": "Joao_Dev"
                 },
                 "birthdate": {
-                  "example": 940125600000,
-                  "required": true
+                  "example": 940125600000
                 },
                 "address": {
-                  "example": "Avenida X",
-                  "required": true
+                  "example": "Avenida X"
                 },
                 "addressNumber": {
-                  "example": 2,
-                  "required": true
+                  "example": 2
                 },
                 "primaryPhone": {
-                  "example": 11999854321,
-                  "required": true
+                  "example": 11999854321
                 },
                 "description": {
                   "example": "Dev Full Stack na Quik Dev"
                 },
                 "password": {
-                  "example": "abcd1234",
-                  "required": true
+                  "example": "abcd1234"
                 }
               }
             }
@@ -112,6 +106,7 @@
           {
             "name": "obj",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
@@ -229,6 +224,7 @@
           {
             "name": "obj",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
@@ -268,6 +264,7 @@
           {
             "name": "obj",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
