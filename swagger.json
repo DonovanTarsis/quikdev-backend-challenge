@@ -5,7 +5,7 @@
     "title": "Quik Dev REST API",
     "description": "Api de controle de usuários."
   },
-  "host": "https://quikdev.herokuapp.com/",
+  "host": "https://quikdev.herokuapp.com",
   "basePath": "/",
   "tags": [],
   "schemes": [
